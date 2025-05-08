@@ -1,11 +1,17 @@
 from flask import Flask, jsonify, render_template
 import firebase_admin
 from firebase_admin import credentials, db
+import os
 
 app = Flask(__name__)
 
+# Load Firebase credentials path from environment variable
+firebase_cred_path = os.environ.get('FIREBASE_CRED_PATH')
+if not firebase_cred_path:
+    raise ValueError("Environment variable FIREBASE_CRED_PATH not set")
+
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate('ipa-gas-sensor-firebase-adminsdk-fbsvc-53db67c55c.json')  # Replace with your path
+cred = credentials.Certificate(firebase_cred_path)
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://ipa-gas-sensor-default-rtdb.asia-southeast1.firebasedatabase.app/'
 })
@@ -47,14 +53,13 @@ def get_gas_data():
             ppm_value = float(ppm)
             gas_level = classify_gas_level(ppm_value)
 
-            if gas_level != 'Green' or gas_level == 'Green':
-                gas_data.append({
-                    'id': house_name,
-                    'coordinates': [lat, lon],
-                    'gasLevel': gas_level,
-                    'ppm': ppm_value,
-                    'address': house_name
-                })
+            gas_data.append({
+                'id': house_name,
+                'coordinates': [lat, lon],
+                'gasLevel': gas_level,
+                'ppm': ppm_value,
+                'address': house_name
+            })
 
         return jsonify(gas_data)
 
