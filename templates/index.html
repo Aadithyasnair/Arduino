@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gas Leak Sensor Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f7fc;
+            color: #333;
+        }
+
+        #map {
+            width: 50%;
+            height: 100%;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        #dashboard {
+            width: 50%;
+            padding: 20px;
+            overflow-y: scroll;
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            margin-left: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            transition: background-color 0.3s ease;
+        }
+
+        th {
+            background-color: #010a30;
+            color: white;
+        }
+
+        td {
+            background-color: transparent;
+        }
+
+        tr:hover td {
+            background-color: transparent;
+            cursor: default;
+        }
+
+        /* Row colors based on gas level */
+        tr.green td { background-color: #4CAF50; color: white; }
+        tr.yellow td { background-color: #FFEB3B; color: black; }
+        tr.orange td { background-color: #FF9800; color: white; }
+        tr.red td { background-color: #F44336; color: white; }
+
+        tr.green:hover td, tr.yellow:hover td, tr.orange:hover td, tr.red:hover td {
+            background-color: inherit;
+        }
+
+        button {
+            background-color: #042a8b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #000a2a;
+        }
+
+        .color-box {
+            width: 15px;
+            height: 15px;
+            margin-right: 8px;
+            border-radius: 50%;
+        }
+
+        .green { background-color: green; }
+        .yellow { background-color: yellow; }
+        .orange { background-color: orange; }
+        .red { background-color: red; }
+
+        /* Modal styles */
+        #severeLeaksModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 15px;
+            border-radius: 15px;
+            width: 80%;
+            max-height: 70%;
+            overflow-y: scroll;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-100px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-content.show {
+            transform: translateY(0);
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .close:hover, .close:focus {
+            color: #333;
+        }
+
+        .leaflet-popup-content-wrapper.severe-leak {
+            background-color: #F44336;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .leaflet-popup-tip.severe-leak {
+            background-color: #F44336;
+        }
+
+        .leaflet-popup-content-wrapper.severe-leak .leaflet-popup-content {
+            margin: 8px;
+            font-size: 12px;
+        }
+
+        /* Legend inside map */
+        .leaflet-control.legend {
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            font-size: 12px;
+        }
+
+        .leaflet-control.legend div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+            }
+
+            #map {
+                width: 100%;
+                height: 50vh;
+                border-radius: 0;
+                margin-bottom: 10px;
+            }
+
+            #dashboard {
+                width: 100%;
+                margin-left: 0;
+                padding: 15px;
+                height: auto;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+
+            th, td {
+                font-size: 10px;
+                padding: 6px;
+                border: 1px solid #ddd;
+            }
+
+            .leaflet-control.legend {
+                bottom: 60px;
+                right: 5px;
+                padding: 8px;
+                font-size: 10px;
+            }
+
+            .color-box {
+                width: 12px;
+                height: 12px;
+                margin-right: 5px;
+            }
+
+            .modal-content {
+                width: 90%;
+                padding: 10px;
+                max-height: 60%;
+            }
+
+            .modal-content h3 {
+                font-size: 16px;
+            }
+
+            .close {
+                font-size: 18px;
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            th, td {
+                font-size: 10px;
+                padding: 6px;
+            }
+
+            button {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+
+            .leaflet-control.legend {
+                font-size: 9px;
+                padding: 5px;
+            }
+
+            .color-box {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        .warning {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #F44336;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            display: none;
+            font-size: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="dashboard">
+        <h2>Gas Leak Sensor Dashboard</h2>
+        <button onclick="showSevereLeaks()">Show All Severe Gas Leaks</button>
+        <table id="sensorData">
+            <thead>
+                <tr>
+                    <th>House ID</th>
+                    <th>Address</th>
+                    <th>Coordinates</th>
+                    <th>Gas Level</th>
+                    <th>PPM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be populated dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="severeLeaksModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <h3>Severe Gas Leaks</h3>
+            <div id="severeLeaksContent">
+                <!-- Severe leaks data will go here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="warning" class="warning">
+        New Severe Gas Leak Detected!
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        const levels = ['Green', 'Yellow', 'Orange', 'Red'];
+        const colorMap = {
+            'Green': 'green',
+            'Yellow': 'yellow',
+            'Orange': 'orange',
+            'Red': 'red'
+        };
+
+        const severityRank = {
+            'Red': 0,
+            'Orange': 1,
+            'Yellow': 2,
+            'Green': 3
+        };
+
+        let map;
+        let markers = [];
+        let gasData = [];
+        let previousSevereIds = new Set(); // Track previous severe leak IDs
+
+        const fetchGasData = async () => {
+            try {
+                const response = await fetch('/api/gas_data');
+                const data = await response.json();
+                if (data.error) {
+                    console.error(data.error);
+                    return;
+                }
+
+                // Check for new severe leaks
+                const currentSevereIds = new Set(data.filter(item => item.gasLevel === 'Red').map(item => item.id));
+                const newSevereLeaks = [...currentSevereIds].filter(id => !previousSevereIds.has(id));
+                if (newSevereLeaks.length > 0) {
+                    showWarning();
+                }
+                previousSevereIds = currentSevereIds;
+
+                gasData = data;
+                updateDashboard();
+            } catch (error) {
+                console.error('Error fetching gas data:', error);
+            }
+        };
+
+        const showWarning = () => {
+            const warning = document.getElementById('warning');
+            warning.style.display = 'block';
+            setTimeout(() => {
+                warning.style.display = 'none';
+            }, 5000); // Hide after 5 seconds
+        };
+
+        const updateDashboard = () => {
+            gasData.sort((a, b) => severityRank[a.gasLevel] - severityRank[b.gasLevel]);
+            const tableBody = document.getElementById('sensorData').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            if (map) {
+                markers.forEach(marker => map.removeLayer(marker));
+                markers = [];
+            }
+
+            gasData.forEach(item => {
+                const row = tableBody.insertRow();
+                row.classList.add(item.gasLevel.toLowerCase());
+                row.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${item.address}</td>
+                    <td>${item.coordinates[0].toFixed(4)}, ${item.coordinates[1].toFixed(4)}</td>
+                    <td>${item.gasLevel}</td>
+                    <td>${item.ppm}</td>
+                `;
+                row.addEventListener('click', () => showPopup(item));
+
+                const marker = L.marker([item.coordinates[0], item.coordinates[1]], {
+                    icon: L.divIcon({
+                        className: 'leaflet-div-icon',
+                        html: `<div style="background-color: ${colorMap[item.gasLevel]}; width: 12px; height: 12px; border-radius: 50%;"></div>`
+                    })
+                }).addTo(map);
+
+                const popupContent = `
+                    <strong>${item.gasLevel === 'Red' ? 'Severe Gas Leak Detected!' : 'Gas Leak Info'}</strong><br>
+                    House ID: ${item.id}<br>
+                    Address: ${item.address}<br>
+                    Coordinates: ${item.coordinates[0].toFixed(4)}, ${item.coordinates[1].toFixed(4)}<br>
+                    PPM: ${item.ppm}
+                `;
+                marker.bindPopup(popupContent, {
+                    className: item.gasLevel === 'Red' ? 'severe-leak' : ''
+                });
+                markers.push(marker);
+            });
+        };
+
+        const showPopup = (item) => {
+            const marker = markers.find(m => m.getLatLng().lat === item.coordinates[0] && m.getLatLng().lng === item.coordinates[1]);
+            if (marker) {
+                map.setView([item.coordinates[0], item.coordinates[1]], 12);
+                marker.openPopup();
+            }
+        };
+
+        map = L.map('map').setView([13.0963, 77.6192], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add legend as a Leaflet control
+        const legend = L.control({ position: 'bottomright' });
+        legend.onAdd = function () {
+            const div = L.DomUtil.create('div', 'leaflet-control legend');
+            div.innerHTML = `
+                <h3>Legend</h3>
+                <div><div class="color-box green"></div> Safe (Green)</div>
+                <div><div class="color-box yellow"></div> Mildly Unsafe (Yellow)</div>
+                <div><div class="color-box orange"></div> Unsafe (Orange)</div>
+                <div><div class="color-box red"></div> Severely Unsafe (Red)</div>
+            `;
+            return div;
+        };
+        legend.addTo(map);
+
+        const showSevereLeaks = () => {
+            const severeLeaks = gasData.filter(item => item.gasLevel === 'Red');
+            let severeText = '<h3>Severe Gas Leaks</h3>';
+            if (severeLeaks.length > 0) {
+                severeLeaks.forEach(item => {
+                    severeText += `<p>House ID: ${item.id}, Address: ${item.address}, Coordinates: ${item.coordinates[0].toFixed(4)}, ${item.coordinates[1].toFixed(4)}, PPM: ${item.ppm}</p>`;
+                });
+            } else {
+                severeText = '<p>No severe gas leaks detected.</p>';
+            }
+            document.getElementById('severeLeaksContent').innerHTML = severeText;
+            document.getElementById('severeLeaksModal').style.display = 'flex';
+            document.querySelector('.modal-content').classList.add('show');
+        };
+
+        const closeModal = () => {
+            document.getElementById('severeLeaksModal').style.display = 'none';
+            document.querySelector('.modal-content').classList.remove('show');
+        };
+
+        // Initial fetch and periodic refresh
+        fetchGasData();
+        setInterval(fetchGasData, 10000); // Refresh every 5 seconds
+    </script>
+</body>
+</html>
