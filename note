@@ -1,0 +1,147 @@
+Module 1 & 2 – 2 Marks Questions (≈ 30 words)
+
+1. What is the main purpose of a server?
+A server provides centralized services and resources to multiple users or clients over a network. It manages data processing, storage, and communication efficiently within an organization or system.
+
+2. Mention any two applications of supercomputers.
+Supercomputers are used in complex scientific calculations such as climate modeling, weather forecasting, molecular simulations, and large-scale data analysis for aerospace and defense research.
+
+3. Define word length. Give a typical range.
+Word length refers to the number of bits a CPU can process in a single operation. Typical ranges are 16-bit, 32-bit, and 64-bit architectures.
+
+4. What is memory access time?
+Memory access time is the interval between initiating a memory read or write request and the completion of data transfer, determining memory speed and overall system performance.
+
+5. Define clock rate and give its relation with clock cycle time.
+Clock rate is the frequency at which a processor executes instructions. It is inversely proportional to clock cycle time: Clock Rate = 1 / Clock Cycle Time.
+
+6. State any two ways to improve computer performance.
+Computer performance can be improved by increasing clock rate, using faster memory (cache), optimizing instruction pipelines, and employing parallel or multicore processing architectures.
+
+7. What is the range of numbers represented using 4-bit 2’s complement?
+For a 4-bit 2’s-complement system, the representable range is −8 to +7 ( from 1000 to 0111 in binary ).
+
+8. Write an example of a three-address instruction.
+Example: ADD R1, R2, R3 → adds contents of R2 and R3 and stores result in R1.
+Here R1 is destination, R2 and R3 are source registers.
+
+9. What is overflow in integer arithmetic? How is it detected?
+Overflow occurs when an arithmetic result exceeds the representable range. It is detected when the carry into and carry out of the sign bit differ.
+
+10. Differentiate Load and Store memory operations.
+Load copies data from memory to a register; Store transfers data from a register to memory. Load = read operation, Store = write operation.
+
+11. Explain the functionality of MAR and MDR.
+MAR (Memory Address Register) holds the memory location address to access. MDR (Memory Data Register) temporarily holds data being transferred between memory and CPU.
+
+12. Discuss the significance of clock signals.
+Clock signals synchronize and control the sequence of all operations in a computer, ensuring proper timing between CPU, memory, and input/output units.
+
+13. Compare RISC and CISC instructions.
+RISC uses simple, uniform instructions executing in one cycle; CISC has complex, multi-cycle instructions. RISC focuses on speed and pipeline efficiency, CISC on instruction richness.
+
+14. Using 2’s complement perform subtraction of −2 and −3.
+−2 = 1110, −3 = 1101. Subtraction (−2 − −3) = (−2 + 3) → 1110 + 0011 = (1) 0001 → +1.
+
+15. Discuss zero-address instruction with an example.
+Zero-address instructions use an implicit stack. Example: ADD adds top two stack values, stores result back. Used in stack-based machines.
+
+16. Compare big-endian and little-endian representation.
+Big-endian stores the most significant byte at the lowest address. Little-endian stores the least significant byte first. Both represent same data differently in memory.
+
+17. Write the purpose of Program Counter (PC) and Instruction Register (IR).
+PC holds the address of the next instruction to fetch; IR stores the current instruction being decoded and executed.
+
+18. Define the types of buses used in a computer.
+Three types: Data Bus (transfers data), Address Bus (carries memory addresses), Control Bus (transfers control signals like Read/Write and clock signals).
+
+19. Define clock rate.
+Clock rate is the speed at which a processor executes cycles per second, measured in Hertz. Higher clock rate means faster instruction execution.
+
+20. Perform −12 + 8 using 2’s complement.
+−12 = 11110100, +8 = 00001000. Add → 11111100 → = −4 in decimal. Hence result = −4.
+
+Module 1 & 2 – 10 Marks Questions (≈ 150 words)
+
+Q1) Perform (+21)+ (−16) and (−23)+ (+13) using 2’s complement.
+In 2’s complement arithmetic, addition and subtraction share the same binary adder. (+21) = 00010101, (−16) = 11110000; adding gives 00000101 → +5. (−23) = 11101001, (+13) = 00001101; sum = 11110110 → −10. Overflow occurs if the carry into and out of the sign bit differ. 2’s complement simplifies arithmetic operations since negatives are represented as bitwise complement plus 1, allowing a single adder for addition and subtraction. This representation is widely used in modern processors due to hardware efficiency and consistent sign handling.
+
+Q2) Explain in detail about Basic Instruction Types. Differentiate RISC and CISC.
+Instruction types: Data Transfer (Load/Store), Arithmetic-Logic (ADD, SUB, AND), Program Control (Jump, Branch), and Input/Output (IN, OUT). RISC (Reduced Instruction Set Computer) uses simple, fixed-length instructions executed in a single cycle, suitable for pipelining and high speed. CISC (Complex Instruction Set Computer) employs variable-length and complex instructions that can perform multi-step operations within a single command. RISC needs more instructions but faster execution; CISC reduces instruction count but slows execution due to complex decoding. RISC focuses on register-to-register operations; CISC directly accesses memory. Overall, RISC architectures offer simplicity and speed, while CISC provides powerful, compact instruction sets.
+
+Q3) Explain the functional units of a computer with a neat diagram.
+A computer has five main functional units: Input Unit, Memory Unit, Arithmetic and Logic Unit (ALU), Output Unit, and Control Unit. The Input Unit accepts data from devices like keyboard or sensors. The Memory Unit stores programs and data temporarily (RAM) or permanently (ROM). The ALU executes arithmetic and logical operations using high-speed registers. The Control Unit directs operations of other units, sending control signals and managing instruction execution. The Output Unit conveys processed results to external devices like monitors or printers. Interconnections via buses enable data flow among units, coordinated by clock signals for synchronous operation. Together, these units form the CPU core for data processing.
+
+Q4) Explain the memory organization of a computer with necessary sketches.
+Memory is organized in a hierarchy for speed and cost efficiency. At the top are CPU registers (fastest and smallest), followed by cache memory (L1/L2) for recently used data. Main memory (RAM) stores active programs and data temporarily; secondary storage (HDD/SSD) holds permanent data. Each memory location has a unique address and stores a fixed number of bits called a word. Addresses are transmitted via address bus, data via data bus, and control signals through control bus. The CPU uses MAR (Memory Address Register) and MDR (Memory Data Register) for communication with memory. Read and Write cycles occur under control of timing signals, coordinating processor–memory interaction for efficient data access.
+
+Q5) Explain stack and Push/Pop operations.
+A stack is a LIFO (Last In First Out) data structure used for temporary storage of data and return addresses during program execution. It resides in main memory and is managed by the Stack Pointer (SP) register. Push adds a value onto the stack (SP decremented, data stored), while Pop removes the top value (SP incremented). Push and Pop operations use memory instructions like Store and Load via SP. Safe Push/Pop operations check for overflow and underflow conditions to prevent memory corruption. Stacks enable function calls, parameter passing, and subroutine nesting by maintaining return addresses in a structured way.
+
+Q6) Explain different types of Read Only Memories and the organization of 16×8 memory chip.
+ROM is non-volatile memory used for permanent data storage. Types include: ROM (fixed factory data), PROM (user-programmable once), EPROM (erasable via UV light), and EEPROM (electrically erasable and rewritable). Flash memory is a modern EEPROM variant allowing block-wise erasure with low power use. A 16×8 memory chip contains 16 words of 8 bits each. It uses 4 address lines (2⁴ = 16), 8 data lines for I/O, and control signals like Read/Write and Chip Select. During read, the decoder activates a specific word line, and sense amplifiers output the stored bits. During write, data is applied to bit lines and stored in cells. Such chips form building blocks for larger memory systems.
+
+Q1) Illustrate a Memory with 32×8 configuration. Describe how Read and Write operations are done.
+A 32×8 memory has 32 words, each 8 bits wide. It requires 5 address lines (2⁵ = 32) and 8 data lines for I/O. The address decoder selects one of the 32 word lines based on the address input. During a Read operation, the CPU sends an address through MAR, and when the Read signal is asserted, the data from that word is transferred to the MDR via sense amplifiers. For Write, the CPU places the data in MDR and activates the Write control signal, allowing data to be stored in the selected word line. The Chip Select (CS) signal enables the chip, ensuring only one memory chip is active in multi-chip systems. This configuration helps explain how word addressing, decoding, and control signals coordinate to achieve proper memory operation in both read and write cycles.
+
+Q2) What is addressing mode? Why do we need various types of addressing modes?
+Addressing mode defines how the operand of an instruction is specified—whether it is an immediate value, register content, or memory address. Various addressing modes such as immediate, direct, indirect, register, and indexed provide programming flexibility. Immediate mode embeds data directly within the instruction, offering fast execution. Register mode accesses operands from registers for high speed. Indirect and index modes allow efficient handling of arrays, loops, and dynamic data structures. By providing different ways to locate data, addressing modes help programmers write shorter, more efficient code and enable compilers to optimize execution. They also allow program relocation, data reusability, and better control over memory organization. Hence, multiple addressing modes enhance performance, flexibility, and code compactness in computer architecture.
+
+Q3) Describe the addressing modes with examples.
+Addressing modes determine how operands are fetched. Common types include:
+• Immediate Mode – Operand value is in the instruction, e.g., MOV R1, #10.
+• Register Mode – Operand is in a register, e.g., MOV R1, R2.
+• Direct (Absolute) Mode – Address of data given directly, e.g., MOV R1, [5000].
+• Indirect Mode – Register contains the address of data, e.g., MOV R1, (R4).
+• Indexed Mode – Address = base + index, e.g., 4(R2).
+• Base with Index – Effective address = [Ri] + [Rj].
+• Auto-Increment/Decrement – Register updates automatically after/before access.
+These modes offer versatility in data access—immediate for constants, indirect for arrays, and indexed for structured data. Together, they simplify complex computations and memory handling.
+
+Q4) Explain different types of Read Only Memories and internal organization of 16×8 memory chip with diagram.
+ROM types include: ROM, PROM, EPROM, EEPROM, and Flash Memory.
+
+ROM is factory-programmed and non-modifiable.
+
+PROM can be programmed once by blowing fuses.
+
+EPROM is erasable using ultraviolet light and reprogrammable.
+
+EEPROM allows electrical erasure and reprogramming without chip removal.
+
+Flash Memory stores data in blocks, enabling quick reprogramming using a single voltage supply.
+A 16×8 memory chip has 16 words (rows) and 8 bits per word (columns). It uses 4 address lines for selection, 8 data lines, and control signals like Chip Select (CS) and Read/Write (R/W). The address decoder activates one word line; sense amplifiers manage data transfer during read or write. The chip’s organization ensures fast data access with minimal pins, forming a basic unit of larger memory systems.
+
+Q5) Explain stack and Push, Pop stack operations.
+A stack is a memory structure following the LIFO principle—Last In, First Out. It is managed using a Stack Pointer (SP) register, which always points to the current top of the stack. Push operation: SP decrements by word size, and new data is stored at the new SP address. Pop operation: data at SP is retrieved into a register, and SP increments to point to the next item. Stacks are implemented in main memory and crucial for function calls, recursion, and subroutine nesting. A “Safe Push” checks for overflow before storing, while a “Safe Pop” checks for underflow before reading. The stack provides efficient parameter passing, return address storage, and local variable management, ensuring structured program execution and nested subroutine handling.
+
+Q6) Explain static RAM and dynamic RAM with necessary diagrams.
+Static RAM (SRAM) uses flip-flops to store bits, maintaining data as long as power is supplied. It is fast, reliable, and used in cache memory. However, its complex circuit design makes it expensive and limits density.
+Dynamic RAM (DRAM) stores each bit as a charge in a capacitor with a transistor. It is slower than SRAM but cheaper and more compact, suitable for main memory. DRAM cells require periodic refreshing due to charge leakage.
+In both types, memory cells are arranged in rows and columns connected via word and bit lines, with sense amplifiers managing data reads and writes. SRAM provides low latency and high speed, while DRAM offers high capacity and cost efficiency, balancing performance and storage needs in modern computer systems.
+
+Q7) Explain safe Push and safe Pop operation.
+Safe stack operations ensure no overflow or underflow.
+Safe Push: Before pushing, the processor checks if the stack has space. If full, an error or interrupt prevents overwriting memory. If space is available, SP is decremented, and data is written to memory at SP.
+Safe Pop: Before popping, the CPU checks if the stack contains any elements. If empty, it prevents invalid memory access or crashes. If not empty, data at SP is read into a register, and SP is incremented.
+These checks maintain memory integrity during subroutine calls, recursion, or parameter passing. In embedded systems and processors, hardware or software safeguards are implemented to ensure proper stack management and avoid system instability.
+
+Q8) Compare the Speed, Size, and Cost of memory devices.
+Memory devices vary in speed, capacity, and cost:
+
+Registers: Fastest, smallest, and most expensive per bit, located inside the CPU.
+
+Cache Memory (SRAM): Very fast and costly; used between CPU and main memory.
+
+Main Memory (DRAM): Medium speed and cost; volatile, used for active programs.
+
+Secondary Memory (Magnetic Disk): Large capacity, low cost, but slower.
+
+Flash Storage: Non-volatile, moderate speed, and cost-efficient for portable devices.
+Speed decreases and capacity increases as we move down the hierarchy. The memory hierarchy balances these factors to achieve optimal system performance and affordability. Cache and registers bridge the speed gap between CPU and main memory, ensuring smooth data flow during processing.
+
+Q9) Discuss subroutine instructions and nesting.
+A subroutine is a reusable block of code performing a specific task, invoked by a Call instruction and returning via a Return instruction. When a subroutine is called, the Program Counter (PC) stores the next instruction’s address into the Link Register (LR) or stack. During subroutine nesting, one subroutine calls another, requiring the previous return address to be preserved. The stack is used to push the old LR before overwriting it for the new call. Upon return, each subroutine pops its respective return address, ensuring correct execution order. This nesting enables modular program design, recursion, and parameter passing, enhancing code reusability and clarity. The stack’s LIFO structure perfectly supports this execution sequence.
+
+Q10) Explain the organization of a 1K×1 memory chip with neat diagram.
+A 1K×1 memory chip contains 1024 words, each storing 1 bit. It requires 10 address lines (2¹⁰ = 1024) to access each word and one data line for reading or writing a bit. Two control lines—Chip Select (CS) and Read/Write (R/W)—manage operation. The address decoder selects one word line corresponding to the input address, while sense amplifiers detect or write data on bit lines. During a Read cycle, data flows from memory cell to data output; during Write, data input drives the selected cell. The chip includes power connections (Vcc, GND). Such single-bit chips are combined in parallel to form wider word memories, e.g., 1K×8 using eight chips. This modular design enables scalable, efficient memory construction.
